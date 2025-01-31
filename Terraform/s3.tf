@@ -3,7 +3,7 @@ data "aws_s3_bucket" "existing_bucket" {
 }  
 
 resource "aws_s3_bucket" "deepseek_bucket" {  
-  count  = data.aws_s3_bucket.existing_bucket.id == null ? 1 : 0  
+  count  = data.aws_s3_bucket.existing_bucket.id == 0 ? 1 : 0
   bucket = "deepseek-model-data2"  
   acl    = "private"  
 }  

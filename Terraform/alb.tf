@@ -35,7 +35,7 @@ resource "aws_security_group" "alb_sg" {
 
 # ALB  
 resource "aws_lb" "deepseek_alb" {  
-  count              = data.aws_lb.existing_alb.id == null ? 1 : 0  
+  count              = data.aws_lb.existing_alb.id == 0 ? 1 : 0 
   name               = "deepseek-alb4"  
   internal           = false  
   load_balancer_type = "application"  
@@ -50,7 +50,7 @@ resource "aws_lb" "deepseek_alb" {
 
 # ALB Target Group  
 resource "aws_lb_target_group" "deepseek_tg" {  
-  count = data.aws_lb_target_group.existing_tg.id == null ? 1 : 0  
+  count = data.aws_lb_target_group.existing_tg.id == 0 ? 1 : 0 
   name  = "deepseek-tg6"  
   port  = 5000  
   protocol = "HTTP"  
