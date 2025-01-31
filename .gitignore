@@ -9,4 +9,4 @@ aws
 
 .terraform.lock.hcl
 
-terraform.tfstate
+
