@@ -17,7 +17,7 @@ resource "aws_security_group" "deepseek_sg" {
     cidr_blocks = ["0.0.0.0/0"] # Restrict it if using in prod env
   }
 
-   ingress {
+  ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
