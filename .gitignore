@@ -1,0 +1,12 @@
+awscliv2.zip
+
+aws
+
+*.pem
+*.key
+
+.terraform
+
+.terraform.lock.hcl
+
+terraform.tfstate
