@@ -71,6 +71,10 @@ jobs:
       - name: Wait for EC2 Instance to Initialize
         run: sleep 60  # Wait for 60 seconds
 
+      - name: Get Public IP
+        id: get_ip
+        run: echo "public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
+
       - name: Verify EC2 Instance
         run: |
           INSTANCE_IP=$(terraform output -raw instance_public_ip)
@@ -92,7 +96,7 @@ jobs:
           fi
       
           # SSH into the instance and run Docker commands
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/deepseek-key ubuntu@$INSTANCE_IP << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/deepseek-key ubuntu@$(terraform output -raw instance_public_ip) << 'EOF'
           set -x 
           sudo docker pull ghcr.io/open-webui/open-webui:main
           sudo docker run -d -p 9793:8080 -v open-webui:/app/backend/data --name deepseek-model ghcr.io/open-webui/open-webui:main
