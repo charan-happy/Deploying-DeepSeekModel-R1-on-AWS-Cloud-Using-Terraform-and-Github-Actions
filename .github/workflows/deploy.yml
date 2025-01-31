@@ -95,7 +95,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/deepseek-key ubuntu@$INSTANCE_IP << 'EOF'
           set -x 
           sudo docker pull ghcr.io/open-webui/open-webui:main
-          docker run -d -p 5000:5000 -v open-webui:/app/backend/data --name deepseek-model ghcr.io/open-webui/open-webui:main
+          sudo docker run -d -p 9793:8080 -v open-webui:/app/backend/data --name deepseek-model ghcr.io/open-webui/open-webui:main
+          sudo curl -fsSL https://ollama.com/install.sh 
           EOF
         env:  
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}  
