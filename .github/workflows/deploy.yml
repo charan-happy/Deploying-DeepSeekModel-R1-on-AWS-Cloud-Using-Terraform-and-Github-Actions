@@ -73,7 +73,7 @@ jobs:
 
       - name: Get Public IP
         id: get_ip
-        run: echo "public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
+        run: echo "public_ip=$(terraform output -raw instance_public_ip)" 
 
       - name: Verify EC2 Instance
         run: |
@@ -85,55 +85,32 @@ jobs:
               echo "EC2 instance is running with public IP: $INSTANCE_IP"
           fi
 
-      - name: Deploy DeepSeek Model R1
-        run: |
-          set -x
+  #    - name: Deploy DeepSeek Model R1
+   #     run: |
+    #      set -x
           # Get the public IP of the EC2 instance
-          INSTANCE_IP=$(terraform output -raw instance_public_ip)
-          if [[ -z "$INSTANCE_IP" || "$INSTANCE_IP" == "No public IP available" ]]; then  
-              echo "No public IP found for the instance."  
-              exit 1  
-          fi
+     #     INSTANCE_IP=$(terraform output -raw instance_public_ip)
+      #    if [[ -z "$INSTANCE_IP" || "$INSTANCE_IP" == "No public IP available" ]]; then  
+      #        echo "No public IP found for the instance."  
+       #       exit 1  
+        #  fi
       
           # SSH into the instance and run Docker commands
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/deepseek-key ubuntu@$(terraform output -raw instance_public_ip) << 'EOF'
-          set -x 
-          sudo docker pull ghcr.io/open-webui/open-webui:main
-          sudo docker run -d -p 9793:8080 -v open-webui:/app/backend/data --name deepseek-model ghcr.io/open-webui/open-webui:main
-          sudo curl -fsSL https://ollama.com/install.sh 
-          EOF
-        env:  
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}  
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}  
-          AWS_REGION: ${{ secrets.AWS_REGION }}  
+       #   ssh -o StrictHostKeyChecking=no -i ~/.ssh/deepseek-key ubuntu@$(terraform output -raw instance_public_ip) << 'EOF'
+       #   set -x 
+       #   sudo docker pull ghcr.io/open-webui/open-webui:main
+       #   sudo docker run -d -p 9793:8080 -v open-webui:/app/backend/data --name deepseek-model ghcr.io/open-webui/open-webui:main
+       #   sudo curl -fsSL https://ollama.com/install.sh 
+      #    EOF
+       # env:  
+      #    AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}  
+      #    AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}  
+     #     AWS_REGION: ${{ secrets.AWS_REGION }}  
 
-      - name: Get Load Balancer DNS name  
-        run: |  
-          ALB_DNS=$(terraform output -raw alb_dns_name)  
-          echo "Deepseek Model R1 is accessible at: http://$ALB_DNS" 
-
-      - name: Print Terraform Outputs
-        run: terraform output
-
-  cleanup:  
-    runs-on: ubuntu-latest  
-    #needs: deploy  
-    if: ${{ github.event_name == 'workflow_dispatch' }}  
-    steps:  
-      - name: Checkout repository  
-        uses: actions/checkout@v3  
-        
-      - name: Setup Terraform  
-        uses: hashicorp/setup-terraform@v2  
-        with:  
-          terraform_version: "1.5.0"  
-      
-      - name: Terraform init 
-        run: cd Terraform && terraform init 
-
-      - name: Terraform destroy  
-        run: cd Terraform && terraform destroy --auto-approve  
-        env:  
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}  
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}  
-          AWS_REGION: ${{ secrets.AWS_REGION }}  
+     # - name: Get Load Balancer DNS name  
+   #     run: |  
+  #        ALB_DNS=$(terraform output -raw alb_dns_name)  
+ #         echo "Deepseek Model R1 is accessible at: http://$ALB_DNS" 
+#
+ #     - name: Print Terraform Outputs
+#        run: terraform output
