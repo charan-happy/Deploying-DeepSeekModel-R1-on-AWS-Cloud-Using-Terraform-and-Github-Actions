@@ -91,8 +91,8 @@ jobs:
             # SSH into the instance and run Docker commands
             ssh -o StrictHostKeyChecking=no -i ~/.ssh/deepseek-key ubuntu@$INSTANCE_IP << 'EOF'
             set -x 
-            sudo docker pull deepseek/model-r1:latest
-            sudo docker run -d -p 5000:5000 --name deepseek-model deepseek/model-r1:latest
+            sudo docker pull ghcr.io/open-webui/open-webui:main
+            docker run -d -p 5000:5000 -v open-webui:/app/backend/data --name deepseek-model ghcr.io/open-webui/open-webui:main
             EOF
         env:  
             AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}  
