@@ -19,6 +19,11 @@ resource "aws_instance" "deepseekmodel" {
   iam_instance_profile = aws_iam_instance_profile.deepseek_profile.name
   security_groups      = [aws_security_group.deepseek_sg.name]
 
+  root_block_device {
+    volume_size = 40
+    volume_type = "gp3"
+  }
+
   # User data script to install Docker and deploy the model
   user_data = file("user-data.sh")
 
